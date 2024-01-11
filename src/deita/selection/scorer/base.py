@@ -23,7 +23,7 @@ class Scorer(object):
         elif self.is_api:
             from openai import OpenAI
 
-            client = OpenAI(base_url=api, api_key="")
+            client = OpenAI(base_url=api, api_key="loremipsum")
             self.openai = partial(client.completions.create, model=model_name_or_path)
         else:
             self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
@@ -49,7 +49,7 @@ class Scorer(object):
                 max_tokens=512,
                 logprobs=1000,
             )
-            logprobs_list = res.choices.logprobs.top_logprobs[0]
+            logprobs_list = res.choices[0].logprobs.top_logprobs[0]
         else:
             input_ids = self.tokenizer.encode(user_input, return_tensors = "pt")
             outputs = self.model.generate(input_ids, max_length = max_length, num_return_sequences = 1, return_dict_in_generate = True, output_scores = True)
@@ -57,8 +57,12 @@ class Scorer(object):
 
         score_logits = []
         score_template = np.array([1,2,3,4,5,6])
-        for k in self.id2score:
-            score_logits.append(logprobs_list[k])
+        if not self.is_api:
+            for k in self.id2score:
+                score_logits.append(logprobs_list[k])
+        else:
+            for k in self.id2score.values():
+                score_logits.append(logprobs_list[k])
         score_logits = np.array(score_logits)
         score_npy = softmax(score_logits, axis=0)
         score_npy = score_npy * score_template
