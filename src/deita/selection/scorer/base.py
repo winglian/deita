@@ -23,7 +23,7 @@ class Scorer(object):
         elif self.is_api:
             from openai import OpenAI
 
-            client = OpenAI(api_base=api, api_key="")
+            client = OpenAI(base_url=api, api_key="")
             self.openai = partial(client.completions.create, model=model_name_or_path)
         else:
             self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
