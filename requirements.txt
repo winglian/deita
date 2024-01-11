@@ -61,7 +61,7 @@ nvidia-nccl-cu12==2.18.1
 nvidia-nvjitlink-cu12==12.3.52
 nvidia-nvtx-cu12==12.1.105
 omegaconf==2.3.0
-openai==0.28.1
+openai>=1.7.1
 packaging==23.2
 pandas==2.1.2
 pathtools==0.1.2
