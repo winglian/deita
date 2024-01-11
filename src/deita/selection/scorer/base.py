@@ -46,7 +46,7 @@ class Scorer(object):
         elif self.is_api:
             res = self.openai(
                 prompt=user_input,
-                max_tokens=512,
+                max_tokens=2,
                 logprobs=1000,
             )
             logprobs_list = res.choices[0].logprobs.top_logprobs[0]
